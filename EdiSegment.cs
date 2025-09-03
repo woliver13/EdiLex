@@ -1,5 +1,3 @@
-using Xunit.Sdk;
-
 namespace EdiLex
 {
     public class EdiSegment

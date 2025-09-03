@@ -1,7 +1,6 @@
-using Xunit;
-
 namespace EdiLex.UnitTests
 {
+    [TestClass]
     public class EdiX12ParserTests
     {
         private readonly EdiSegmentParser _parser;
@@ -11,7 +10,7 @@ namespace EdiLex.UnitTests
             _parser = new EdiSegmentParser();
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseSegment_ValidSegment_ReturnsCorrectSegment()
         {
             // Arrange
@@ -21,18 +20,18 @@ namespace EdiLex.UnitTests
             var segment = _parser.ParseSegment(input);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("ISA", segment.Id);
-            Assert.Equal(16, segment.Elements.Count);
-            Assert.Equal("00", segment.Elements[1].Value);
-            Assert.Equal("ZZ", segment.Elements[4].Value);
-            Assert.Equal("250902", segment.Elements[9].Value);
-            Assert.Equal(">", segment.Elements[16].Value);
-            Assert.Empty(segment.Elements[1].SubElements);
-            Assert.Empty(segment.Elements[1].RepeatingElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("ISA", segment.Id);
+            Assert.AreEqual(16, segment.Elements.Count);
+            Assert.AreEqual("00", segment.Elements[1].Value);
+            Assert.AreEqual("ZZ", segment.Elements[4].Value);
+            Assert.AreEqual("250902", segment.Elements[9].Value);
+            Assert.AreEqual(">", segment.Elements[16].Value);
+            Assert.IsEmpty(segment.Elements[1].SubElements);
+            Assert.IsEmpty(segment.Elements[1].RepeatingElements);
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiSegmentConstructor_ValidSegmentString_ReturnsCorrectSegment()
         {
             // Arrange
@@ -43,18 +42,18 @@ namespace EdiLex.UnitTests
             var segment = new EdiSegment(input, separators);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("ISA", segment.Id);
-            Assert.Equal(16, segment.Elements.Count);
-            Assert.Equal("00", segment.Elements[1].Value);
-            Assert.Equal("ZZ", segment.Elements[4].Value);
-            Assert.Equal("250902", segment.Elements[9].Value);
-            Assert.Equal(">", segment.Elements[16].Value);
-            Assert.Empty(segment.Elements[1].SubElements);
-            Assert.Empty(segment.Elements[16].RepeatingElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("ISA", segment.Id);
+            Assert.AreEqual(16, segment.Elements.Count);
+            Assert.AreEqual("00", segment.Elements[1].Value);
+            Assert.AreEqual("ZZ", segment.Elements[4].Value);
+            Assert.AreEqual("250902", segment.Elements[9].Value);
+            Assert.AreEqual(">", segment.Elements[16].Value);
+            Assert.IsEmpty(segment.Elements[1].SubElements);
+            Assert.IsEmpty(segment.Elements[16].RepeatingElements);
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiSegmentIndexer_ValidIndices_ReturnsCorrectSubElement()
         {
             // Arrange
@@ -65,13 +64,13 @@ namespace EdiLex.UnitTests
             var subElement = segment[1, 1];
 
             // Assert
-            Assert.Equal("1", subElement);
-            Assert.Equal("SUB1", segment[1, 2]);
-            Assert.Equal("SUB2", segment[1, 3]);
-            Assert.Equal("SUB3", segment[1, 4]);
+            Assert.AreEqual("1", subElement);
+            Assert.AreEqual("SUB1", segment[1, 2]);
+            Assert.AreEqual("SUB2", segment[1, 3]);
+            Assert.AreEqual("SUB3", segment[1, 4]);
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiSegmentIndexer_InvalidElementIndex_ThrowsKeyNotFoundException()
         {
             // Arrange
@@ -82,7 +81,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<KeyNotFoundException>(() => segment[2, 1]);
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiSegmentIndexer_InvalidSubElementIndex_ThrowsKeyNotFoundException()
         {
             // Arrange
@@ -93,7 +92,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<KeyNotFoundException>(() => segment[1, 5]);
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseSegment_EmptyInput_ThrowsArgumentException()
         {
             // Arrange
@@ -103,7 +102,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<ArgumentException>(() => _parser.ParseSegment(input));
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiSegmentConstructor_EmptyInput_ThrowsArgumentException()
         {
             // Arrange
@@ -114,7 +113,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<ArgumentException>(() => new EdiSegment(input, separators));
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseSegment_InvalidSegmentId_ThrowsFormatException()
         {
             // Arrange
@@ -124,7 +123,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<FormatException>(() => _parser.ParseSegment(input));
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiSegmentConstructor_InvalidSegmentId_ThrowsFormatException()
         {
             // Arrange
@@ -135,7 +134,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<FormatException>(() => new EdiSegment(input, separators));
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseElements_ValidElements_ReturnsCorrectElementList()
         {
             // Arrange
@@ -145,16 +144,16 @@ namespace EdiLex.UnitTests
             var segment = _parser.ParseSegment(input);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("REF", segment.Id);
-            Assert.Equal(2, segment.Elements.Count);
-            Assert.Equal("BM", segment.Elements[1].Value);
-            Assert.Equal("123456789", segment.Elements[2].Value);
-            Assert.Empty(segment.Elements[1].SubElements);
-            Assert.Empty(segment.Elements[2].RepeatingElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("REF", segment.Id);
+            Assert.AreEqual(2, segment.Elements.Count);
+            Assert.AreEqual("BM", segment.Elements[1].Value);
+            Assert.AreEqual("123456789", segment.Elements[2].Value);
+            Assert.IsEmpty(segment.Elements[1].SubElements);
+            Assert.IsEmpty(segment.Elements[2].RepeatingElements);
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseSubElements_ValidSubElements_ReturnsCorrectSubElementList()
         {
             // Arrange
@@ -164,19 +163,19 @@ namespace EdiLex.UnitTests
             var segment = _parser.ParseSegment(input);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("LX", segment.Id);
-            Assert.Single(segment.Elements);
-            Assert.Equal("1:SUB1:SUB2:SUB3", segment.Elements[1].Value);
-            Assert.Equal(4, segment.Elements[1].SubElements.Count);
-            Assert.Equal("1", segment.Elements[1].SubElements[1]);
-            Assert.Equal("SUB1", segment.Elements[1].SubElements[2]);
-            Assert.Equal("SUB2", segment.Elements[1].SubElements[3]);
-            Assert.Equal("SUB3", segment.Elements[1].SubElements[4]);
-            Assert.Empty(segment.Elements[1].RepeatingElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("LX", segment.Id);
+            Assert.AreEqual(1, segment.Elements.Count);
+            Assert.AreEqual("1:SUB1:SUB2:SUB3", segment.Elements[1].Value);
+            Assert.AreEqual(4, segment.Elements[1].SubElements.Count);
+            Assert.AreEqual("1", segment.Elements[1].SubElements[1]);
+            Assert.AreEqual("SUB1", segment.Elements[1].SubElements[2]);
+            Assert.AreEqual("SUB2", segment.Elements[1].SubElements[3]);
+            Assert.AreEqual("SUB3", segment.Elements[1].SubElements[4]);
+            Assert.IsEmpty(segment.Elements[1].RepeatingElements);
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseSubElements_NoSubElements_ReturnsEmptySubElementList()
         {
             // Arrange
@@ -186,15 +185,15 @@ namespace EdiLex.UnitTests
             var segment = _parser.ParseSegment(input);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("LX", segment.Id);
-            Assert.Equal(2, segment.Elements.Count);
-            Assert.Equal("ELEMENT", segment.Elements[2].Value);
-            Assert.Empty(segment.Elements[2].SubElements);
-            Assert.Empty(segment.Elements[2].RepeatingElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("LX", segment.Id);
+            Assert.AreEqual(2, segment.Elements.Count);
+            Assert.AreEqual("ELEMENT", segment.Elements[2].Value);
+            Assert.IsEmpty(segment.Elements[2].SubElements);
+            Assert.IsEmpty(segment.Elements[2].RepeatingElements);
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseRepeatingElements_ValidRepeatingElements_ReturnsCorrectList()
         {
             // Arrange
@@ -204,19 +203,19 @@ namespace EdiLex.UnitTests
             var segment = _parser.ParseSegment(input);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("N1", segment.Id);
-            Assert.Equal(3, segment.Elements.Count);
-            Assert.Equal("FI>REP1>REP2>REP3", segment.Elements[3].Value);
-            Assert.Equal(4, segment.Elements[3].RepeatingElements.Count);
-            Assert.Equal("FI", segment.Elements[3].RepeatingElements[1]);
-            Assert.Equal("REP1", segment.Elements[3].RepeatingElements[2]);
-            Assert.Equal("REP2", segment.Elements[3].RepeatingElements[3]);
-            Assert.Equal("REP3", segment.Elements[3].RepeatingElements[4]);
-            Assert.Empty(segment.Elements[3].SubElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("N1", segment.Id);
+            Assert.AreEqual(3, segment.Elements.Count);
+            Assert.AreEqual("FI>REP1>REP2>REP3", segment.Elements[3].Value);
+            Assert.AreEqual(4, segment.Elements[3].RepeatingElements.Count);
+            Assert.AreEqual("FI", segment.Elements[3].RepeatingElements[1]);
+            Assert.AreEqual("REP1", segment.Elements[3].RepeatingElements[2]);
+            Assert.AreEqual("REP2", segment.Elements[3].RepeatingElements[3]);
+            Assert.AreEqual("REP3", segment.Elements[3].RepeatingElements[4]);
+            Assert.IsEmpty(segment.Elements[3].SubElements);
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseRepeatingElements_NoRepeatingElements_ReturnsEmptyList()
         {
             // Arrange
@@ -226,15 +225,15 @@ namespace EdiLex.UnitTests
             var segment = _parser.ParseSegment(input);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("N1", segment.Id);
-            Assert.Equal(3, segment.Elements.Count);
-            Assert.Equal("FI", segment.Elements[3].Value);
-            Assert.Empty(segment.Elements[3].RepeatingElements);
-            Assert.Empty(segment.Elements[3].SubElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("N1", segment.Id);
+            Assert.AreEqual(3, segment.Elements.Count);
+            Assert.AreEqual("FI", segment.Elements[3].Value);
+            Assert.IsEmpty(segment.Elements[3].RepeatingElements);
+            Assert.IsEmpty(segment.Elements[3].SubElements);
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseSegment_MissingTerminator_ThrowsFormatException()
         {
             // Arrange
@@ -244,7 +243,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<FormatException>(() => _parser.ParseSegment(input));
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiSegmentConstructor_MissingTerminator_ThrowsFormatException()
         {
             // Arrange
@@ -255,7 +254,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<FormatException>(() => new EdiSegment(input, separators));
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseSegment_ValidWithCustomSeparators_ReturnsCorrectSegment()
         {
             // Arrange
@@ -268,16 +267,16 @@ namespace EdiLex.UnitTests
             var segment = _parser.ParseSegment(input);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("ISA", segment.Id);
-            Assert.Equal(16, segment.Elements.Count);
-            Assert.Equal("00", segment.Elements[1].Value);
-            Assert.Equal("?", segment.Elements[16].Value);
-            Assert.Empty(segment.Elements[1].SubElements);
-            Assert.Empty(segment.Elements[16].RepeatingElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("ISA", segment.Id);
+            Assert.AreEqual(16, segment.Elements.Count);
+            Assert.AreEqual("00", segment.Elements[1].Value);
+            Assert.AreEqual("?", segment.Elements[16].Value);
+            Assert.IsEmpty(segment.Elements[1].SubElements);
+            Assert.IsEmpty(segment.Elements[16].RepeatingElements);
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseSegment_MultipleSegments_ProcessesOnlyFirst()
         {
             // Arrange
@@ -287,14 +286,14 @@ namespace EdiLex.UnitTests
             var segment = _parser.ParseSegment(input);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("ISA", segment.Id);
-            Assert.Equal(16, segment.Elements.Count);
-            Assert.Empty(segment.Elements[1].SubElements);
-            Assert.Empty(segment.Elements[16].RepeatingElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("ISA", segment.Id);
+            Assert.AreEqual(16, segment.Elements.Count);
+            Assert.IsEmpty(segment.Elements[1].SubElements);
+            Assert.IsEmpty(segment.Elements[16].RepeatingElements);
         }
 
-        [Fact]
+        [TestMethod]
         public void ParseSubElements_EmptyElement_ReturnsEmptyList()
         {
             // Arrange
@@ -304,12 +303,12 @@ namespace EdiLex.UnitTests
             var segment = _parser.ParseSegment(input);
 
             // Assert
-            Assert.NotNull(segment);
-            Assert.Equal("LX", segment.Id);
-            Assert.Equal(2, segment.Elements.Count);
-            Assert.Equal("", segment.Elements[2].Value);
-            Assert.Empty(segment.Elements[2].SubElements);
-            Assert.Empty(segment.Elements[2].RepeatingElements);
+            Assert.IsNotNull(segment);
+            Assert.AreEqual("LX", segment.Id);
+            Assert.AreEqual(2, segment.Elements.Count);
+            Assert.AreEqual("", segment.Elements[2].Value);
+            Assert.IsEmpty(segment.Elements[2].SubElements);
+            Assert.IsEmpty(segment.Elements[2].RepeatingElements);
         }
     }
 }

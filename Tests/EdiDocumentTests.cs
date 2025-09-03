@@ -1,10 +1,8 @@
 using System.Text;
-using Xunit;
-
 
 namespace EdiLex.UnitTests
 {
-
+    [TestClass]
     public class EdiDocumentTests
     {
         private readonly EdiSegmentParser _parser;
@@ -14,7 +12,7 @@ namespace EdiLex.UnitTests
             _parser = new EdiSegmentParser();
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_ToString_ValidDocument_ReturnsCorrectString()
         {
             // Arrange
@@ -34,10 +32,10 @@ namespace EdiLex.UnitTests
                               "ST*850*0001~\n" +
                               "N1*ST*NAME*FI>REP1>REP2>REP3~\n" +
                               "SE*4*0001~";
-            Assert.Equal(expected, result);
+            Assert.AreEqual(expected, result);
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_UpdateSESegmentCount_SegmentCountChanged_UpdatesSE01()
         {
             // Arrange
@@ -54,11 +52,11 @@ namespace EdiLex.UnitTests
 
             // Assert
             var seSegment = document.Segments.FirstOrDefault(s => s.Id == "SE");
-            Assert.NotNull(seSegment);
-            Assert.Equal("3", seSegment.Elements[1].Value); // Counts ST, N1, SE (3 segments)
+            Assert.IsNotNull(seSegment);
+            Assert.AreEqual("3", seSegment.Elements[1].Value); // Counts ST, N1, SE (3 segments)
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_UpdateSESegmentCount_MultipleTransactionSets_UpdatesAllSE01()
         {
             // Arrange
@@ -80,12 +78,12 @@ namespace EdiLex.UnitTests
 
             // Assert
             var seSegments = document.Segments.Where(s => s.Id == "SE").ToList();
-            Assert.Equal(2, seSegments.Count);
-            Assert.Equal("3", seSegments[0].Elements[1].Value); // First ST, N1, SE (3 segments)
-            Assert.Equal("4", seSegments[1].Elements[1].Value); // Second ST, N1, REF, SE (4 segments)
+            Assert.AreEqual(2, seSegments.Count);
+            Assert.AreEqual("3", seSegments[0].Elements[1].Value); // First ST, N1, SE (3 segments)
+            Assert.AreEqual("4", seSegments[1].Elements[1].Value); // Second ST, N1, REF, SE (4 segments)
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_UpdateSESegmentCount_NoSESegment_DoesNotThrow()
         {
             // Arrange
@@ -97,10 +95,10 @@ namespace EdiLex.UnitTests
             document.UpdateSESegmentCount();
 
             // Assert
-            Assert.Equal(2, document.Segments.Count); // No changes
+            Assert.AreEqual(2, document.Segments.Count); // No changes
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_UpdateSESegmentCount_EmptyDocument_DoesNotThrow()
         {
             // Arrange
@@ -110,10 +108,10 @@ namespace EdiLex.UnitTests
             document.UpdateSESegmentCount();
 
             // Assert
-            Assert.Empty(document.Segments);
+            Assert.IsEmpty(document.Segments);
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_UpdateSESegmentCount_NoSTSegment_DoesNotUpdate()
         {
             // Arrange
@@ -128,11 +126,11 @@ namespace EdiLex.UnitTests
 
             // Assert
             var seSegment = document.Segments.FirstOrDefault(s => s.Id == "SE");
-            Assert.NotNull(seSegment);
-            Assert.Equal("2", seSegment.Elements[1].Value); // Unchanged, no ST segment
+            Assert.IsNotNull(seSegment);
+            Assert.AreEqual("2", seSegment.Elements[1].Value); // Unchanged, no ST segment
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_Load_ValidStream_ReturnsCorrectDocument()
         {
             // Arrange
@@ -148,18 +146,18 @@ namespace EdiLex.UnitTests
             document.Load(stream);
 
             // Assert
-            Assert.Equal(5, document.Segments.Count);
-            Assert.Equal("ISA", document.Segments[0].Id);
-            Assert.Equal("GS", document.Segments[1].Id);
-            Assert.Equal("ST", document.Segments[2].Id);
-            Assert.Equal("N1", document.Segments[3].Id);
-            Assert.Equal("SE", document.Segments[4].Id);
-            Assert.Equal("3", document.Segments[4].Elements[1].Value);
-            Assert.Equal("FI>REP1>REP2>REP3", document.Segments[3].Elements[3].Value);
-            Assert.Equal("REP1", document.Segments[3].Elements[3].RepeatingElements[2]);
+            Assert.AreEqual(5, document.Segments.Count);
+            Assert.AreEqual("ISA", document.Segments[0].Id);
+            Assert.AreEqual("GS", document.Segments[1].Id);
+            Assert.AreEqual("ST", document.Segments[2].Id);
+            Assert.AreEqual("N1", document.Segments[3].Id);
+            Assert.AreEqual("SE", document.Segments[4].Id);
+            Assert.AreEqual("3", document.Segments[4].Elements[1].Value);
+            Assert.AreEqual("FI>REP1>REP2>REP3", document.Segments[3].Elements[3].Value);
+            Assert.AreEqual("REP1", document.Segments[3].Elements[3].RepeatingElements[2]);
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_Load_EmptyStream_ThrowsArgumentException()
         {
             // Arrange
@@ -171,7 +169,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<ArgumentException>(() => document.Load(stream));
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_Load_InvalidSegment_ThrowsFormatException()
         {
             // Arrange
@@ -184,7 +182,7 @@ namespace EdiLex.UnitTests
             Assert.Throws<FormatException>(() => document.Load(stream));
         }
 
-        [Fact]
+        [TestMethod]
         public void EdiDocument_Load_MultipleTransactionSets_ReturnsCorrectDocument()
         {
             // Arrange
@@ -206,20 +204,20 @@ namespace EdiLex.UnitTests
             document.Load(stream);
 
             // Assert
-            Assert.Equal(11, document.Segments.Count);
-            Assert.Equal("ISA", document.Segments[0].Id);
-            Assert.Equal("GS", document.Segments[1].Id);
-            Assert.Equal("ST", document.Segments[2].Id);
-            Assert.Equal("N1", document.Segments[3].Id);
-            Assert.Equal("SE", document.Segments[4].Id);
-            Assert.Equal("3", document.Segments[4].Elements[1].Value);
-            Assert.Equal("ST", document.Segments[5].Id);
-            Assert.Equal("N1", document.Segments[6].Id);
-            Assert.Equal("REF", document.Segments[7].Id);
-            Assert.Equal("SE", document.Segments[8].Id);
-            Assert.Equal("4", document.Segments[8].Elements[1].Value);
-            Assert.Equal("GE", document.Segments[9].Id);
-            Assert.Equal("IEA", document.Segments[10].Id);
+            Assert.AreEqual(11, document.Segments.Count);
+            Assert.AreEqual("ISA", document.Segments[0].Id);
+            Assert.AreEqual("GS", document.Segments[1].Id);
+            Assert.AreEqual("ST", document.Segments[2].Id);
+            Assert.AreEqual("N1", document.Segments[3].Id);
+            Assert.AreEqual("SE", document.Segments[4].Id);
+            Assert.AreEqual("3", document.Segments[4].Elements[1].Value);
+            Assert.AreEqual("ST", document.Segments[5].Id);
+            Assert.AreEqual("N1", document.Segments[6].Id);
+            Assert.AreEqual("REF", document.Segments[7].Id);
+            Assert.AreEqual("SE", document.Segments[8].Id);
+            Assert.AreEqual("4", document.Segments[8].Elements[1].Value);
+            Assert.AreEqual("GE", document.Segments[9].Id);
+            Assert.AreEqual("IEA", document.Segments[10].Id);
         }
     }
 }
