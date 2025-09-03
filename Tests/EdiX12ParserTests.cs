@@ -2,7 +2,7 @@ using Xunit;
 
 namespace EdiLex.UnitTests
 {
-       public class EdiX12ParserTests
+    public class EdiX12ParserTests
     {
         private readonly EdiSegmentParser _parser;
 
@@ -166,7 +166,7 @@ namespace EdiLex.UnitTests
             // Assert
             Assert.NotNull(segment);
             Assert.Equal("LX", segment.Id);
-            Assert.Equal(1, segment.Elements.Count);
+            Assert.Single(segment.Elements);
             Assert.Equal("1:SUB1:SUB2:SUB3", segment.Elements[1].Value);
             Assert.Equal(4, segment.Elements[1].SubElements.Count);
             Assert.Equal("1", segment.Elements[1].SubElements[1]);
